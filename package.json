@@ -1,0 +1,19 @@
+{
+  "name": "sunwinapibot-kendy",
+  "version": "1.0.0",
+  "description": "Minimal Telegram account bot for info, history, and password change commands",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "dev": "node --watch src/bot.js",
+    "check": "node -c src/bot.js && node -c src/config/env.js && node -c src/handlers/botHandler.js && node -c src/handlers/adminHandler.js && node -c src/handlers/accountHandler.js && node -c src/handlers/historyHandler.js && node -c src/handlers/changePassHandler.js && node -c src/services/adminState.js && node -c src/services/apiClient.js && node -c src/utils/botUtils.js && node -c src/utils/formatters.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.5",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
