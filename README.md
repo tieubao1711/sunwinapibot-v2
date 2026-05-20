@@ -21,6 +21,8 @@ ADMIN_PASSWORD=change-this-password
 
 Bot khong tra loi trong private chat. Admin phai dang nhap trong group bang tai khoan/mat khau da cau hinh trong `.env`, sau do set group/topic bot duoc phep hoat dong.
 
+Trong group, neu muon go lenh khong can tag bot, vao BotFather va `/setprivacy` thanh `Disable`. Neu privacy dang bat, hay dung lenh kem bot username, vi du `/history@BotUsername username|password`.
+
 ## Chay bot
 
 ```bash
