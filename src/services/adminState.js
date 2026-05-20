@@ -97,8 +97,46 @@ function shouldHandleAdminCommand(msg) {
   return String(msg?.chat?.id) === config.groupId;
 }
 
+function getUserCommandBlockReason(msg) {
+  const config = getGroupConfig();
+
+  if (!isGroupChat(msg)) {
+    return 'Bot chi hoat dong trong group, khong tra loi private chat.';
+  }
+
+  if (!config.groupId) {
+    return 'Bot chua duoc set group. Admin can dung /adminlogin roi /setgroup trong group nay.';
+  }
+
+  if (String(msg?.chat?.id) !== config.groupId) {
+    return `Group nay khong co quyen dung bot. Group da set: ${config.groupId}. Group hien tai: ${msg?.chat?.id}.`;
+  }
+
+  if (config.topicId && String(msg?.message_thread_id || '') !== config.topicId) {
+    return `Sai topic. Topic da set: ${config.topicId}. Topic hien tai: ${msg?.message_thread_id || 'khong co topic id'}.`;
+  }
+
+  return '';
+}
+
+function getAdminCommandBlockReason(msg) {
+  const config = getGroupConfig();
+
+  if (!isGroupChat(msg)) {
+    return 'Lenh admin chi dung trong group, khong dung private chat.';
+  }
+
+  if (config.groupId && String(msg?.chat?.id) !== config.groupId) {
+    return `Group nay khong co quyen quan tri bot. Group da set: ${config.groupId}. Group hien tai: ${msg?.chat?.id}.`;
+  }
+
+  return '';
+}
+
 module.exports = {
+  getAdminCommandBlockReason,
   getGroupConfig,
+  getUserCommandBlockReason,
   isAdminLoggedIn,
   isGroupChat,
   loginAdmin,

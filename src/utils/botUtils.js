@@ -1,7 +1,25 @@
 function commandRegex(command, withArgs = true) {
   const suffix = '(?:@\\w+)?';
-  const args = withArgs ? '(?:\\s+(.+))?' : '';
-  return new RegExp(`^/${command}${suffix}${args}$`, 'i');
+  const args = withArgs ? '(?:\\s+([\\s\\S]+?))?' : '';
+  return new RegExp(`^/${command}${suffix}${args}\\s*$`, 'i');
+}
+
+function parseBotCommand(text) {
+  const match = String(text || '').trim().match(/^\/([a-z0-9_]+)(?:@([a-z0-9_]+))?(?:\s+([\s\S]*))?$/i);
+  if (!match) return null;
+  return {
+    command: match[1].toLowerCase(),
+    targetBot: match[2] ? match[2].toLowerCase() : '',
+    args: match[3] || ''
+  };
+}
+
+function isCommandForThisBot(msg, botUsername) {
+  const parsed = parseBotCommand(msg?.text);
+  if (!parsed) return false;
+  if (!parsed.targetBot) return true;
+  if (!botUsername) return true;
+  return parsed.targetBot === String(botUsername).toLowerCase();
 }
 
 function getSessionKey(chatId, userId) {
@@ -85,6 +103,8 @@ module.exports = {
   extractAxiosError,
   getSessionKey,
   helpMessage,
+  isCommandForThisBot,
+  parseBotCommand,
   parseCredentials,
   threadOptions
 };
