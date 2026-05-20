@@ -11,7 +11,9 @@ function getSessionKey(chatId, userId) {
 function extractAxiosError(error) {
   const data = error?.response?.data;
 
-  if (typeof data === 'string') return data;
+  if (typeof data === 'string') {
+    return extractHtmlPreText(data) || data;
+  }
 
   return (
     data?.message ||
@@ -20,6 +22,19 @@ function extractAxiosError(error) {
     error?.message ||
     'Da xay ra loi khong xac dinh'
   );
+}
+
+function extractHtmlPreText(value) {
+  const match = String(value || '').match(/<pre>([\s\S]*?)<\/pre>/i);
+  if (!match) return '';
+  return match[1]
+    .replace(/<[^>]+>/g, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
 }
 
 function parseCredentials(input) {

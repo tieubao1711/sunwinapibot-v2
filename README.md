@@ -13,6 +13,7 @@ Tao file `.env` tu mau:
 ```env
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 API_BASE_URL=http://localhost:3000
+HISTORY_API_BASE_URL=http://localhost:3001
 REQUEST_TIMEOUT_MS=30000
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=change-this-password
@@ -74,7 +75,7 @@ Cau hinh group/topic duoc luu o `data/admin-config.json` khi bot dang chay.
 
 ## API dang dung
 
-Bot su dung `API_BASE_URL` va cac endpoint duoc lay tu project mau:
+Bot su dung `API_BASE_URL` cho info/change password va `HISTORY_API_BASE_URL` cho history. Neu khong set `HISTORY_API_BASE_URL`, bot se fallback ve `API_BASE_URL`.
 
 - `POST /account/info` voi body `{ username, password }`
 - `GET /central-login-results/latest` voi query `{ username, password }`

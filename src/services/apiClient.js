@@ -9,13 +9,18 @@ const client = axios.create({
   }
 });
 
+const historyClient = axios.create({
+  baseURL: env.historyApiBaseUrl,
+  timeout: env.requestTimeoutMs
+});
+
 async function fetchAccountInfo(username, password) {
   const { data } = await client.post('/account/info', { username, password });
   return data;
 }
 
 async function fetchLatestHistory(username, password) {
-  const { data } = await client.get('/central-login-results/latest', {
+  const { data } = await historyClient.get('/central-login-results/latest', {
     params: { username, password }
   });
   return data;
