@@ -54,10 +54,12 @@ function getGroupConfig() {
 function setGroupId(groupId) {
   const normalizedGroupId = normalizeId(groupId);
   if (!normalizedGroupId) return getGroupConfig();
+  const groupChanged = groupConfig.groupId && groupConfig.groupId !== normalizedGroupId;
 
   return saveGroupConfig({
     ...groupConfig,
-    groupId: normalizedGroupId
+    groupId: normalizedGroupId,
+    ...(groupChanged ? { topicId: '' } : {})
   });
 }
 
@@ -91,10 +93,7 @@ function shouldHandleUserCommand(msg) {
 }
 
 function shouldHandleAdminCommand(msg) {
-  const config = getGroupConfig();
-  if (!isGroupChat(msg)) return false;
-  if (!config.groupId) return true;
-  return String(msg?.chat?.id) === config.groupId;
+  return isGroupChat(msg);
 }
 
 function getUserCommandBlockReason(msg) {
@@ -120,14 +119,8 @@ function getUserCommandBlockReason(msg) {
 }
 
 function getAdminCommandBlockReason(msg) {
-  const config = getGroupConfig();
-
   if (!isGroupChat(msg)) {
     return 'Lenh admin chi dung trong group, khong dung private chat.';
-  }
-
-  if (config.groupId && String(msg?.chat?.id) !== config.groupId) {
-    return `Group nay khong co quyen quan tri bot. Group da set: ${config.groupId}. Group hien tai: ${msg?.chat?.id}.`;
   }
 
   return '';
