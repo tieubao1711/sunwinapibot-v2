@@ -20,7 +20,7 @@ async function fetchAccountInfo(username, password) {
 }
 
 async function fetchLatestHistory(username, password) {
-  const { data } = await historyClient.get('/central-login-results/latest', {
+  const { data } = await historyClient.get('/central-login-results-2/latest', {
     params: { username, password }
   });
   return data;
