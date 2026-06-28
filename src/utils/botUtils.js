@@ -28,18 +28,51 @@ function getSessionKey(chatId, userId) {
 
 function extractAxiosError(error) {
   const data = error?.response?.data;
+  const detail = extractResponseMessage(data);
 
-  if (typeof data === 'string') {
-    return extractHtmlPreText(data) || data;
-  }
+  if (detail) return detail;
 
   return (
-    data?.message ||
-    data?.error ||
-    data?.data?.message ||
     error?.message ||
     'Da xay ra loi khong xac dinh'
   );
+}
+
+function extractResponseMessage(value) {
+  if (value === undefined || value === null) return '';
+
+  if (typeof value === 'string') {
+    return extractHtmlPreText(value) || value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(extractResponseMessage).filter(Boolean).join('\n');
+  }
+
+  if (typeof value !== 'object') {
+    return String(value);
+  }
+
+  const direct =
+    value.message ||
+    value.msg ||
+    value.error ||
+    value.reason ||
+    value.detail ||
+    value.data?.message ||
+    value.data?.msg ||
+    value.data?.error ||
+    value.data?.data?.message ||
+    value.data?.data?.msg ||
+    value.data?.data?.error;
+
+  if (direct) return extractResponseMessage(direct);
+
+  try {
+    return JSON.stringify(value);
+  } catch (error) {
+    return '';
+  }
 }
 
 function extractHtmlPreText(value) {
@@ -105,6 +138,7 @@ function helpMessage() {
 module.exports = {
   commandRegex,
   extractAxiosError,
+  extractResponseMessage,
   getSessionKey,
   helpMessage,
   isCommandForThisBot,

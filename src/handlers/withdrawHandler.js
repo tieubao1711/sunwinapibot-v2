@@ -38,6 +38,15 @@ async function handleWithdrawCommand(bot, msg, match) {
       parse_mode: 'HTML'
     }));
   } catch (error) {
+    console.error('Withdraw failed:', {
+      mode: payload.mode,
+      username: payload.username || '',
+      amount: payload.amount,
+      status: error?.response?.status,
+      response: error?.response?.data || null,
+      message: error?.message
+    });
+
     await bot.sendMessage(chatId, `<b>Rut tien that bai</b>\n<code>${escapeHtml(extractAxiosError(error))}</code>`, threadOptions(msg, {
       parse_mode: 'HTML'
     }));
