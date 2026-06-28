@@ -7,6 +7,7 @@ const {
 } = require('./adminHandler');
 const { handleChangePassCommand } = require('./changePassHandler');
 const { handleHistoryCommand } = require('./historyHandler');
+const { handleWithdrawCommand } = require('./withdrawHandler');
 const {
   commandRegex,
   helpMessage,
@@ -22,7 +23,7 @@ const {
 } = require('../services/adminState');
 
 const ADMIN_COMMANDS = new Set(['adminlogin', 'setgroup', 'settopic', 'adminstatus']);
-const USER_COMMANDS = new Set(['start', 'help', 'info', 'history', 'changepass']);
+const USER_COMMANDS = new Set(['start', 'help', 'info', 'history', 'changepass', 'ruttien']);
 const ALL_COMMANDS = new Set([...ADMIN_COMMANDS, ...USER_COMMANDS]);
 
 function registerBotHandlers(bot, botUsername = '') {
@@ -60,6 +61,10 @@ function registerBotHandlers(bot, botUsername = '') {
 
   bot.onText(commandRegex('changepass'), withUserGuard(bot, botUsername, (msg, match) => {
     return handleChangePassCommand(bot, msg, match);
+  }));
+
+  bot.onText(commandRegex('ruttien'), withUserGuard(bot, botUsername, (msg, match) => {
+    return handleWithdrawCommand(bot, msg, match);
   }));
 
   bot.on('message', async (msg) => {

@@ -14,6 +14,14 @@ const historyClient = axios.create({
   timeout: env.requestTimeoutMs
 });
 
+const withdrawClient = axios.create({
+  baseURL: env.withdrawApiBaseUrl,
+  timeout: env.requestTimeoutMs,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
 async function fetchAccountInfo(username, password) {
   const { data } = await client.post('/account/info', { username, password });
   return data;
@@ -35,8 +43,26 @@ async function changePasswordByLogin(username, password, newPassword) {
   return data;
 }
 
+async function createWithdrawal(username, password, amount) {
+  const payload = {
+    username,
+    password,
+    amount
+  };
+
+  if (env.withdrawProxyPoolId) {
+    payload.proxyPoolId = env.withdrawProxyPoolId;
+    payload.proxyId = env.withdrawProxyId;
+    payload.forceReloadProxy = env.withdrawForceReloadProxy;
+  }
+
+  const { data } = await withdrawClient.post('/withdraw', payload);
+  return data;
+}
+
 module.exports = {
   changePasswordByLogin,
+  createWithdrawal,
   fetchAccountInfo,
   fetchLatestHistory
 };

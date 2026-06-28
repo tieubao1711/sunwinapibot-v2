@@ -1,6 +1,6 @@
 # Minimal Telegram Account Bot
 
-Node.js Telegram bot dung `node-telegram-bot-api`, chay polling va chi giu 3 nhom lenh: `/info`, `/history`, `/changepass`.
+Node.js Telegram bot dung `node-telegram-bot-api`, chay polling va giu cac lenh: `/info`, `/history`, `/changepass`, `/ruttien`.
 
 ## Cai dat
 
@@ -14,6 +14,10 @@ Tao file `.env` tu mau:
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 API_BASE_URL=http://localhost:3000
 HISTORY_API_BASE_URL=http://localhost:3001
+WITHDRAW_API_BASE_URL=http://localhost:4587
+WITHDRAW_PROXY_POOL_ID=
+WITHDRAW_PROXY_ID=
+WITHDRAW_FORCE_RELOAD_PROXY=false
 REQUEST_TIMEOUT_MS=30000
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=change-this-password
@@ -54,6 +58,9 @@ Bot chi tra loi trong group/topic da duoc admin set. Trong group co the goi lenh
 
 /changepass username oldPassword newPassword
 /changepass username|oldPassword newPassword
+
+/ruttien username password amount
+/ruttien username|password amount
 ```
 
 `/start` va `/help` hien thi huong dan ngan gon cho 3 lenh tren.
@@ -82,3 +89,4 @@ Bot su dung `API_BASE_URL` cho info/change password va `HISTORY_API_BASE_URL` ch
 - `POST /account/info` voi body `{ username, password }`
 - `GET /central-login-results/latest` voi query `{ username, password }`
 - `POST /login/change-password` voi body `{ username, password, newPassword }`
+- `POST /withdraw` tren `WITHDRAW_API_BASE_URL` voi body `{ username, password, amount }`

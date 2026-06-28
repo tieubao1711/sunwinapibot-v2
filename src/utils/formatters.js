@@ -106,9 +106,46 @@ function buildHistoryMessage(item) {
   return lines.join('\n');
 }
 
+function buildWithdrawResultMessage(response, amount) {
+  const bankAccount = response?.bankAccount || {};
+  const init = response?.init || {};
+  const result = response?.data || {};
+  const message =
+    result?.data?.message ||
+    result?.message ||
+    init?.data?.message ||
+    response?.message ||
+    (response?.success ? 'Tao lenh rut thanh cong' : 'Tao lenh rut that bai');
+
+  const lines = [
+    response?.success ? '<b>RUT TIEN THANH CONG</b>' : '<b>RUT TIEN THAT BAI</b>',
+    `So tien: <b>${formatNumber(amount)}</b>`,
+    `Thong bao: ${escapeHtml(message)}`
+  ];
+
+  if (response?.proxyId) {
+    lines.push(`Proxy: <code>${escapeHtml(response.proxyId)}</code>`);
+  }
+
+  if (bankAccount.accountHolder || bankAccount.bankId || bankAccount.accountNo) {
+    lines.push('');
+    lines.push('<b>Ngan hang mac dinh</b>');
+    lines.push(`Chu TK: ${escapeHtml(bankAccount.accountHolder || '-')}`);
+    lines.push(`Bank ID: <code>${escapeHtml(bankAccount.bankId || '-')}</code>`);
+    lines.push(`So TK: <code>${escapeHtml(bankAccount.accountNo || '-')}</code>`);
+  }
+
+  if (init?.data?.pendingTxId) {
+    lines.push(`Pending TX: <code>${escapeHtml(init.data.pendingTxId)}</code>`);
+  }
+
+  return lines.join('\n');
+}
+
 module.exports = {
   buildBasicInfoMessage,
   buildHistoryMessage,
+  buildWithdrawResultMessage,
   escapeHtml,
   formatDateTime,
   formatNumber
