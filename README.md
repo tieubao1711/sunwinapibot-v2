@@ -59,6 +59,7 @@ Bot chi tra loi trong group/topic da duoc admin set. Trong group co the goi lenh
 /changepass username oldPassword newPassword
 /changepass username|oldPassword newPassword
 
+/ruttien accessToken amount
 /ruttien username password amount
 /ruttien username|password amount
 ```
@@ -89,4 +90,5 @@ Bot su dung `API_BASE_URL` cho info/change password va `HISTORY_API_BASE_URL` ch
 - `POST /account/info` voi body `{ username, password }`
 - `GET /central-login-results/latest` voi query `{ username, password }`
 - `POST /login/change-password` voi body `{ username, password, newPassword }`
+- `POST /withdraw/token` tren `WITHDRAW_API_BASE_URL` voi body `{ accessToken, amount }`
 - `POST /withdraw` tren `WITHDRAW_API_BASE_URL` voi body `{ username, password, amount }`

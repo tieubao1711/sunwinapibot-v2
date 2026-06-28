@@ -1,4 +1,7 @@
-const { createWithdrawal } = require('../services/apiClient');
+const {
+  createWithdrawal,
+  createWithdrawalByToken
+} = require('../services/apiClient');
 const { buildWithdrawResultMessage, escapeHtml } = require('../utils/formatters');
 const { extractAxiosError, threadOptions } = require('../utils/botUtils');
 
@@ -11,10 +14,12 @@ async function handleWithdrawCommand(bot, msg, match) {
       chatId,
       [
         'Cach dung:',
+        '/ruttien accessToken amount',
         '/ruttien username|password amount',
         '/ruttien username password amount',
         '',
         'Vi du:',
+        '/ruttien eyJhbGciOi... 200000',
         '/ruttien user01|pass123 200000'
       ].join('\n'),
       threadOptions(msg)
@@ -25,7 +30,9 @@ async function handleWithdrawCommand(bot, msg, match) {
   await bot.sendMessage(chatId, 'Dang tao lenh rut tien...', threadOptions(msg));
 
   try {
-    const response = await createWithdrawal(payload.username, payload.password, payload.amount);
+    const response = payload.mode === 'token'
+      ? await createWithdrawalByToken(payload.accessToken, payload.amount)
+      : await createWithdrawal(payload.username, payload.password, payload.amount);
 
     await bot.sendMessage(chatId, buildWithdrawResultMessage(response, payload.amount), threadOptions(msg, {
       parse_mode: 'HTML'
@@ -54,6 +61,7 @@ function parseWithdrawInput(input) {
     if (!username.trim() || !password.trim()) return null;
 
     return {
+      mode: 'credentials',
       username: username.trim(),
       password: password.trim(),
       amount
@@ -61,12 +69,24 @@ function parseWithdrawInput(input) {
   }
 
   const args = raw.split(/\s+/).filter(Boolean);
+  if (args.length === 2) {
+    const amount = parseAmount(args[1]);
+    if (!amount) return null;
+
+    return {
+      mode: 'token',
+      accessToken: args[0],
+      amount
+    };
+  }
+
   if (args.length < 3) return null;
 
   const amount = parseAmount(args[2]);
   if (!amount) return null;
 
   return {
+    mode: 'credentials',
     username: args[0],
     password: args[1],
     amount

@@ -43,6 +43,22 @@ async function changePasswordByLogin(username, password, newPassword) {
   return data;
 }
 
+async function createWithdrawalByToken(accessToken, amount) {
+  const payload = {
+    accessToken,
+    amount
+  };
+
+  if (env.withdrawProxyPoolId) {
+    payload.proxyPoolId = env.withdrawProxyPoolId;
+    payload.proxyId = env.withdrawProxyId;
+    payload.forceReloadProxy = env.withdrawForceReloadProxy;
+  }
+
+  const { data } = await withdrawClient.post('/withdraw/token', payload);
+  return data;
+}
+
 async function createWithdrawal(username, password, amount) {
   const payload = {
     username,
@@ -63,6 +79,7 @@ async function createWithdrawal(username, password, amount) {
 module.exports = {
   changePasswordByLogin,
   createWithdrawal,
+  createWithdrawalByToken,
   fetchAccountInfo,
   fetchLatestHistory
 };

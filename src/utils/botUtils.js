@@ -96,6 +96,7 @@ function helpMessage() {
     '<code>/changepass username oldPassword newPassword</code>',
     '<code>/changepass username|oldPassword newPassword</code>',
     '',
+    '<code>/ruttien accessToken amount</code>',
     '<code>/ruttien username password amount</code>',
     '<code>/ruttien username|password amount</code>'
   ].join('\n');
