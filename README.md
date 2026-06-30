@@ -50,6 +50,8 @@ npm run check
 Bot chi tra loi trong group/topic da duoc admin set. Trong group co the goi lenh kem suffix bot username, vi du `/info@BotUsername`.
 
 ```text
+/id
+
 /info username password
 /info username|password
 

@@ -120,6 +120,8 @@ function helpMessage() {
   return [
     '<b>Huong dan su dung</b>',
     '',
+    '<code>/id</code>',
+    '',
     '<code>/info username password</code>',
     '<code>/info username|password</code>',
     '',

@@ -23,8 +23,9 @@ const {
 } = require('../services/adminState');
 
 const ADMIN_COMMANDS = new Set(['adminlogin', 'setgroup', 'settopic', 'adminstatus']);
+const UTILITY_COMMANDS = new Set(['id']);
 const USER_COMMANDS = new Set(['start', 'help', 'info', 'history', 'changepass', 'ruttien']);
-const ALL_COMMANDS = new Set([...ADMIN_COMMANDS, ...USER_COMMANDS]);
+const ALL_COMMANDS = new Set([...ADMIN_COMMANDS, ...UTILITY_COMMANDS, ...USER_COMMANDS]);
 
 function registerBotHandlers(bot, botUsername = '') {
   bot.onText(commandRegex('start', false), withUserGuard(bot, botUsername, async (msg) => {
@@ -49,6 +50,10 @@ function registerBotHandlers(bot, botUsername = '') {
 
   bot.onText(commandRegex('adminstatus', false), withAdminGuard(bot, botUsername, (msg) => {
     return handleAdminStatusCommand(bot, msg);
+  }));
+
+  bot.onText(commandRegex('id', false), withGroupOnly(bot, botUsername, async (msg) => {
+    await safeSend(bot, msg, buildIdMessage(msg), { parse_mode: 'HTML' });
   }));
 
   bot.onText(commandRegex('info'), withUserGuard(bot, botUsername, (msg, match) => {
@@ -106,6 +111,24 @@ function withAdminGuard(bot, botUsername, handler) {
 
     await runHandler(bot, msg, () => handler(msg, match));
   };
+}
+
+function withGroupOnly(bot, botUsername, handler) {
+  return async (msg, match) => {
+    if (!isCommandForThisBot(msg, botUsername)) return;
+    if (msg.chat?.type === 'private') return;
+
+    await runHandler(bot, msg, () => handler(msg, match));
+  };
+}
+
+function buildIdMessage(msg) {
+  return [
+    '<b>Telegram ID</b>',
+    `Group ID: <code>${msg.chat?.id || ''}</code>`,
+    `Topic ID: <code>${msg.message_thread_id || 'khong co'}</code>`,
+    `Chat type: <code>${msg.chat?.type || ''}</code>`
+  ].join('\n');
 }
 
 async function runHandler(bot, msg, fn) {
