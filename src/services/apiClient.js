@@ -126,8 +126,44 @@ async function verifyEmail(username, password, email = '', otp = '') {
 }
 
 async function fetchLatestOtp(username) {
-  const { data } = await withdrawClient.post(env.otpApiPath, { username });
-  return data;
+  const errors = [];
+
+  if (env.otpApiPath) {
+    try {
+      const { data } = await withdrawClient.post(env.otpApiPath, { username });
+      return data;
+    } catch (error) {
+      errors.push(error);
+      if (!isNotFoundRoute(error)) throw error;
+    }
+  }
+
+  const fallbacks = [
+    () => emailLookupClient.get('/email/by-username', { params: { username } }),
+    () => emailLookupClient.get('/email/latest-otp', { params: { username } }),
+    () => emailLookupClient.post('/email/latest-otp', { username }),
+    () => emailLookupClient.get('/otp/by-username', { params: { username } }),
+    () => emailLookupClient.post('/otp/by-username', { username })
+  ];
+
+  for (const request of fallbacks) {
+    try {
+      const { data } = await request();
+      return data;
+    } catch (error) {
+      errors.push(error);
+      if (!isNotFoundRoute(error)) throw error;
+    }
+  }
+
+  throw errors[0] || new Error('Khong tim thay endpoint lay OTP.');
+}
+
+function isNotFoundRoute(error) {
+  const status = error?.response?.status;
+  const data = error?.response?.data;
+  const text = typeof data === 'string' ? data : JSON.stringify(data || '');
+  return status === 404 || /Cannot\s+(GET|POST)/i.test(text);
 }
 
 module.exports = {
