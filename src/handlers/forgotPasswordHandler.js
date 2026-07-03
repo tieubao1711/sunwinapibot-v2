@@ -11,9 +11,11 @@ async function handleForgotPasswordCommand(bot, msg, match) {
       chatId,
       [
         'Cach dung:',
+        '/forgotpass username newPassword',
         '/forgotpass username email newPassword',
         '',
         'Vi du:',
+        '/forgotpass user01 NewPass123',
         '/forgotpass user01 user01@gmail.com NewPass123'
       ].join('\n'),
       threadOptions(msg)
@@ -46,12 +48,21 @@ async function handleForgotPasswordCommand(bot, msg, match) {
 
 function parseForgotPasswordInput(input) {
   const args = String(input || '').trim().split(/\s+/).filter(Boolean);
-  if (args.length < 3) return null;
+  if (args.length < 2) return null;
 
-  const [username, email, ...newPasswordParts] = args;
+  const username = args[0];
+  let email = '';
+  let newPasswordParts = args.slice(1);
+
+  if (args[1]?.includes('@')) {
+    if (args.length < 3) return null;
+    email = args[1];
+    newPasswordParts = args.slice(2);
+  }
+
   const newPassword = newPasswordParts.join(' ');
 
-  if (!username || !email || !newPassword || !email.includes('@')) return null;
+  if (!username || !newPassword) return null;
 
   return {
     username,
