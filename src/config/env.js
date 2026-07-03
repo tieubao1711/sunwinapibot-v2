@@ -16,6 +16,7 @@ module.exports = {
   apiBaseUrl: (process.env.API_BASE_URL || 'http://localhost:3000').replace(/\/$/, ''),
   historyApiBaseUrl: (process.env.HISTORY_API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:3000').replace(/\/$/, ''),
   withdrawApiBaseUrl: (process.env.WITHDRAW_API_BASE_URL || 'http://localhost:4587').replace(/\/$/, ''),
+  otpApiPath: process.env.OTP_API_PATH || '/login/latest-otp',
   withdrawProxyPoolId: process.env.WITHDRAW_PROXY_POOL_ID || '',
   withdrawProxyId: process.env.WITHDRAW_PROXY_ID || '',
   withdrawForceReloadProxy: parseBoolean(process.env.WITHDRAW_FORCE_RELOAD_PROXY),

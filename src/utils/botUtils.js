@@ -133,6 +133,13 @@ function helpMessage() {
     '',
     '<code>/forgotpass username email newPassword</code>',
     '',
+    '<code>/regemail username password</code>',
+    '<code>/regemail username|password</code>',
+    '<code>/regemail username password email</code>',
+    '<code>/regemail username|password email</code>',
+    '',
+    '<code>/otp username</code>',
+    '',
     '<code>/ruttien accessToken amount</code>',
     '<code>/ruttien username password amount</code>',
     '<code>/ruttien username|password amount</code>'

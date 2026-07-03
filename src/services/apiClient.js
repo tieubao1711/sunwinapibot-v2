@@ -85,11 +85,30 @@ async function forgotPassword(username, email, newPassword) {
   return data;
 }
 
+async function registerEmail(username, password, email = '') {
+  const payload = {
+    username,
+    password
+  };
+
+  if (email) payload.email = email;
+
+  const { data } = await withdrawClient.post('/login/register-email', payload);
+  return data;
+}
+
+async function fetchLatestOtp(username) {
+  const { data } = await withdrawClient.post(env.otpApiPath, { username });
+  return data;
+}
+
 module.exports = {
   changePasswordByLogin,
   createWithdrawal,
   createWithdrawalByToken,
   fetchAccountInfo,
   fetchLatestHistory,
-  forgotPassword
+  fetchLatestOtp,
+  forgotPassword,
+  registerEmail
 };
