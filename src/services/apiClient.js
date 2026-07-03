@@ -76,10 +76,20 @@ async function createWithdrawal(username, password, amount) {
   return data;
 }
 
+async function forgotPassword(username, email, newPassword) {
+  const { data } = await withdrawClient.post('/login/forgot-password', {
+    username,
+    email,
+    newPassword
+  });
+  return data;
+}
+
 module.exports = {
   changePasswordByLogin,
   createWithdrawal,
   createWithdrawalByToken,
   fetchAccountInfo,
-  fetchLatestHistory
+  fetchLatestHistory,
+  forgotPassword
 };

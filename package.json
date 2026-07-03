@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/bot.js",
     "dev": "node --watch src/bot.js",
-    "check": "node -c src/bot.js && node -c src/config/env.js && node -c src/handlers/botHandler.js && node -c src/handlers/adminHandler.js && node -c src/handlers/accountHandler.js && node -c src/handlers/historyHandler.js && node -c src/handlers/changePassHandler.js && node -c src/handlers/withdrawHandler.js && node -c src/services/adminState.js && node -c src/services/apiClient.js && node -c src/utils/botUtils.js && node -c src/utils/formatters.js"
+    "check": "node -c src/bot.js && node -c src/config/env.js && node -c src/handlers/botHandler.js && node -c src/handlers/adminHandler.js && node -c src/handlers/accountHandler.js && node -c src/handlers/historyHandler.js && node -c src/handlers/changePassHandler.js && node -c src/handlers/forgotPasswordHandler.js && node -c src/handlers/withdrawHandler.js && node -c src/services/adminState.js && node -c src/services/apiClient.js && node -c src/utils/botUtils.js && node -c src/utils/formatters.js"
   },
   "keywords": [],
   "author": "",
