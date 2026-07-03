@@ -88,7 +88,12 @@ function isEmailLike(value) {
 
 function normalizeRegisterEmailResponse(response) {
   const data = response?.data || response || {};
-  const success = response?.success === true || data?.success === true || data?.confirmed === true;
+  const email = data.email || data.data?.email || '';
+  const createdEmail = data.createdEmail || data.data?.createdEmail || '';
+  const confirmedEmail = data.confirmedEmail || data.data?.confirmedEmail || '';
+  const confirmed = data.confirmed ?? data.data?.confirmed;
+  const hasEmail = Boolean(email || createdEmail || confirmedEmail);
+  const success = (response?.success === true || data?.success === true || confirmed === true) && (confirmed !== false || hasEmail);
   const message =
     data?.message ||
     data?.data?.message ||
@@ -98,10 +103,10 @@ function normalizeRegisterEmailResponse(response) {
   return {
     success,
     message,
-    email: data.email || data.data?.email || '',
-    createdEmail: data.createdEmail || data.data?.createdEmail || '',
-    confirmedEmail: data.confirmedEmail || data.data?.confirmedEmail || '',
-    confirmed: data.confirmed ?? data.data?.confirmed,
+    email,
+    createdEmail,
+    confirmedEmail,
+    confirmed,
     otp: data.otp || data.data?.otp || '',
     stages: Array.isArray(data.stages) ? data.stages : Array.isArray(data.data?.stages) ? data.data.stages : []
   };

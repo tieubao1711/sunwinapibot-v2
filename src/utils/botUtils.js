@@ -131,6 +131,8 @@ function helpMessage() {
     '<b>Email va mat khau</b>',
     '<code>/regemail user|pass</code>',
     '<code>/regemail user|pass email@domain.com</code>',
+    '<code>/verifyemail user|pass</code>',
+    '<code>/verifyemail user|pass email@domain.com otp</code>',
     '<code>/forgotpass user newPass</code>',
     '<code>/forgotpass user email@domain.com newPass</code>',
     '<code>/otp username</code>',

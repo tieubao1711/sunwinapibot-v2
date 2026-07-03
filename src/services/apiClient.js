@@ -22,6 +22,11 @@ const withdrawClient = axios.create({
   }
 });
 
+const emailLookupClient = axios.create({
+  baseURL: env.emailLookupBaseUrl,
+  timeout: env.requestTimeoutMs
+});
+
 async function fetchAccountInfo(username, password) {
   const { data } = await client.post('/account/info', { username, password });
   return data;
@@ -88,6 +93,13 @@ async function forgotPassword(username, email, newPassword) {
   return data;
 }
 
+async function fetchEmailByUsername(username) {
+  const { data } = await emailLookupClient.get('/email/by-username', {
+    params: { username }
+  });
+  return data;
+}
+
 async function registerEmail(username, password, email = '') {
   const payload = {
     username,
@@ -97,6 +109,19 @@ async function registerEmail(username, password, email = '') {
   if (email) payload.email = email;
 
   const { data } = await withdrawClient.post('/login/register-email', payload);
+  return data;
+}
+
+async function verifyEmail(username, password, email = '', otp = '') {
+  const payload = {
+    username,
+    password
+  };
+
+  if (email) payload.email = email;
+  if (otp) payload.otp = otp;
+
+  const { data } = await withdrawClient.post('/login/verify-email', payload);
   return data;
 }
 
@@ -112,6 +137,8 @@ module.exports = {
   fetchAccountInfo,
   fetchLatestHistory,
   fetchLatestOtp,
+  fetchEmailByUsername,
   forgotPassword,
-  registerEmail
+  registerEmail,
+  verifyEmail
 };

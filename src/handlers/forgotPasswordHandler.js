@@ -1,4 +1,7 @@
-const { forgotPassword } = require('../services/apiClient');
+const {
+  fetchEmailByUsername,
+  forgotPassword
+} = require('../services/apiClient');
 const { escapeHtml } = require('../utils/formatters');
 const { extractAxiosError, threadOptions } = require('../utils/botUtils');
 
@@ -26,7 +29,8 @@ async function handleForgotPasswordCommand(bot, msg, match) {
   await bot.sendMessage(chatId, 'Dang xu ly quen mat khau...', threadOptions(msg));
 
   try {
-    const response = await forgotPassword(payload.username, payload.email, payload.newPassword);
+    const email = payload.email || await resolveEmail(payload.username);
+    const response = await forgotPassword(payload.username, email, payload.newPassword);
     const result = normalizeForgotPasswordResponse(response);
 
     if (!result.success) {
@@ -44,6 +48,29 @@ async function handleForgotPasswordCommand(bot, msg, match) {
       parse_mode: 'HTML'
     }));
   }
+}
+
+async function resolveEmail(username) {
+  const response = await fetchEmailByUsername(username);
+  const email = extractEmail(response);
+  if (!email) {
+    throw new Error('Khong tim thay email da dang ky cho username nay.');
+  }
+  return email;
+}
+
+function extractEmail(response) {
+  const data = response?.data || response || {};
+  return (
+    data.email ||
+    data.mail ||
+    data.usernameEmail ||
+    data.data?.email ||
+    data.data?.mail ||
+    data.item?.email ||
+    data.item?.mail ||
+    ''
+  );
 }
 
 function parseForgotPasswordInput(input) {

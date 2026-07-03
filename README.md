@@ -1,6 +1,6 @@
 # Minimal Telegram Account Bot
 
-Node.js Telegram bot dung `node-telegram-bot-api`, chay polling va giu cac lenh: `/info`, `/history`, `/changepass`, `/forgotpass`, `/regemail`, `/otp`, `/ruttien`.
+Node.js Telegram bot dung `node-telegram-bot-api`, chay polling va giu cac lenh: `/info`, `/history`, `/changepass`, `/forgotpass`, `/regemail`, `/verifyemail`, `/otp`, `/ruttien`.
 
 ## Cai dat
 
@@ -15,6 +15,7 @@ TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 API_BASE_URL=http://localhost:3000
 HISTORY_API_BASE_URL=http://localhost:3001
 WITHDRAW_API_BASE_URL=http://localhost:4587
+EMAIL_LOOKUP_BASE_URL=http://103.82.23.27:5001
 OTP_API_PATH=/login/latest-otp
 WITHDRAW_PROXY_POOL_ID=
 WITHDRAW_PROXY_ID=
@@ -70,6 +71,11 @@ Bot chi tra loi trong group/topic da duoc admin set. Trong group co the goi lenh
 /regemail username password email
 /regemail username|password email
 
+/verifyemail username password
+/verifyemail username|password
+/verifyemail username password email otp
+/verifyemail username|password email otp
+
 /otp username
 
 /ruttien accessToken amount
@@ -105,6 +111,7 @@ Bot su dung `API_BASE_URL` cho info/change password va `HISTORY_API_BASE_URL` ch
 - `POST /login/change-password` voi body `{ username, password, newPassword }`
 - `POST /login/forgot-password` tren `WITHDRAW_API_BASE_URL` voi body `{ username, newPassword, email? }`
 - `POST /login/register-email` tren `WITHDRAW_API_BASE_URL` voi body `{ username, password, email? }`
+- `POST /login/verify-email` tren `WITHDRAW_API_BASE_URL` voi body `{ username, password, email?, otp? }`
 - `POST ${OTP_API_PATH}` tren `WITHDRAW_API_BASE_URL` voi body `{ username }`
 - `POST /withdraw/token` tren `WITHDRAW_API_BASE_URL` voi body `{ accessToken, amount }`
 - `POST /withdraw` tren `WITHDRAW_API_BASE_URL` voi body `{ username, password, amount }`

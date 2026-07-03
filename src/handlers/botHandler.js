@@ -10,6 +10,7 @@ const { handleForgotPasswordCommand } = require('./forgotPasswordHandler');
 const { handleHistoryCommand } = require('./historyHandler');
 const { handleOtpCommand } = require('./otpHandler');
 const { handleRegisterEmailCommand } = require('./registerEmailHandler');
+const { handleVerifyEmailCommand } = require('./verifyEmailHandler');
 const { handleWithdrawCommand } = require('./withdrawHandler');
 const {
   commandRegex,
@@ -27,7 +28,7 @@ const {
 
 const ADMIN_COMMANDS = new Set(['adminlogin', 'setgroup', 'settopic', 'adminstatus']);
 const UTILITY_COMMANDS = new Set(['id']);
-const USER_COMMANDS = new Set(['start', 'help', 'info', 'history', 'changepass', 'forgotpass', 'regemail', 'otp', 'ruttien']);
+const USER_COMMANDS = new Set(['start', 'help', 'info', 'history', 'changepass', 'forgotpass', 'regemail', 'verifyemail', 'otp', 'ruttien']);
 const ALL_COMMANDS = new Set([...ADMIN_COMMANDS, ...UTILITY_COMMANDS, ...USER_COMMANDS]);
 
 function registerBotHandlers(bot, botUsername = '') {
@@ -77,6 +78,10 @@ function registerBotHandlers(bot, botUsername = '') {
 
   bot.onText(commandRegex('regemail'), withUserGuard(bot, botUsername, (msg, match) => {
     return handleRegisterEmailCommand(bot, msg, match);
+  }));
+
+  bot.onText(commandRegex('verifyemail'), withUserGuard(bot, botUsername, (msg, match) => {
+    return handleVerifyEmailCommand(bot, msg, match);
   }));
 
   bot.onText(commandRegex('otp'), withUserGuard(bot, botUsername, (msg, match) => {
